@@ -1,5 +1,13 @@
 import sqlite3
 
+def tasks_all():
+    conn = connect_to_db()
+    rows = conn.execute(
+        """
+        SELECT * FROM tasks
+        """
+    ).fetchall()
+    return [dict(row) for row in rows]
 
 def connect_to_db():
     conn = sqlite3.connect("database.db")
