@@ -9,6 +9,20 @@ def tasks_all():
     ).fetchall()
     return [dict(row) for row in rows]
 
+def tasks_create(name, estimated_time, deadline):
+    conn = connect_to_db()
+    row = conn.execute(
+        """
+        INSERT INTO tasks (name, estimated_time, deadline)
+        VALUES (?, ?, ?)
+        RETURNING *
+        """,
+        (name, estimated_time, deadline),
+    ).fetchone()
+    conn.commit()
+    return dict(row)
+
+
 def connect_to_db():
     conn = sqlite3.connect("database.db")
     conn.row_factory = sqlite3.Row
