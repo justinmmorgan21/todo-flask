@@ -46,6 +46,18 @@ def tasks_update_by_id(id, name, estimated_time, deadline):
     conn.commit()
     return dict(row)
 
+def tasks_destroy_by_id(id):
+    conn = connect_to_db()
+    row = conn.execute(
+        """
+        DELETE from tasks
+        WHERE id = ?
+        """,
+        (id,),
+    )
+    conn.commit()
+    return {"message": "Task destroyed successfully"}
+
 
 def connect_to_db():
     conn = sqlite3.connect("database.db")

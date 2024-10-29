@@ -25,6 +25,10 @@ def update(id):
     deadline = request.form.get("deadline")
     return db.tasks_update_by_id(id, name, estimated_time, deadline)
 
+@app.route("/tasks/<id>.json", methods=["DELETE"])
+def destroy(id):
+    return db.tasks_destroy_by_id(id)
+
 @app.route('/')
 def hello():
     return 'Hello, World!'
