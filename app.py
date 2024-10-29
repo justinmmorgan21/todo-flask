@@ -18,6 +18,13 @@ def create():
 def show(id):
     return db.tasks_find_by_id(id)
 
+@app.route("/tasks/<id>.json", methods=["PATCH"])
+def update(id):
+    name = request.form.get("name")
+    estimated_time = request.form.get("estimated_time")
+    deadline = request.form.get("deadline")
+    return db.tasks_update_by_id(id, name, estimated_time, deadline)
+
 @app.route('/')
 def hello():
     return 'Hello, World!'

@@ -33,6 +33,19 @@ def tasks_find_by_id(id):
     ).fetchone()
     return dict(row)
 
+def tasks_update_by_id(id, name, estimated_time, deadline):
+    conn = connect_to_db()
+    row = conn.execute(
+        """
+        UPDATE tasks SET name = ?, estimated_time = ?, deadline = ?
+        WHERE id = ?
+        RETURNING *
+        """,
+        (name, estimated_time, deadline, id),
+    ).fetchone()
+    conn.commit()
+    return dict(row)
+
 
 def connect_to_db():
     conn = sqlite3.connect("database.db")
