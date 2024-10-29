@@ -14,6 +14,10 @@ def create():
     deadline = request.form.get("deadline")
     return db.tasks_create(name, estimated_time, deadline)
 
+@app.route("/tasks/<id>.json")
+def show(id):
+    return db.tasks_find_by_id(id)
+
 @app.route('/')
 def hello():
     return 'Hello, World!'
