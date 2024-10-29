@@ -1,5 +1,6 @@
 import sqlite3
 
+# INDEX
 def tasks_all():
     conn = connect_to_db()
     rows = conn.execute(
@@ -9,6 +10,7 @@ def tasks_all():
     ).fetchall()
     return [dict(row) for row in rows]
 
+# CREATE
 def tasks_create(name, estimated_time, deadline):
     conn = connect_to_db()
     row = conn.execute(
@@ -22,6 +24,7 @@ def tasks_create(name, estimated_time, deadline):
     conn.commit()
     return dict(row)
 
+# SHOW
 def tasks_find_by_id(id):
     conn = connect_to_db()
     row = conn.execute(
@@ -33,19 +36,32 @@ def tasks_find_by_id(id):
     ).fetchone()
     return dict(row)
 
+# UPDATE
 def tasks_update_by_id(id, name, estimated_time, deadline):
     conn = connect_to_db()
+    row = conn.execute(
+        """
+        SELECT * FROM tasks
+        WHERE id = ?
+        """,
+        (id,),
+    ).fetchone()
+    curr_name = row['name']
+    curr_time = row['estimated_time']
+    curr_deadline = row['deadline']
+    
     row = conn.execute(
         """
         UPDATE tasks SET name = ?, estimated_time = ?, deadline = ?
         WHERE id = ?
         RETURNING *
         """,
-        (name, estimated_time, deadline, id),
+        (name or curr_name, estimated_time or curr_time, deadline or curr_deadline, id),
     ).fetchone()
     conn.commit()
     return dict(row)
 
+# DELETE
 def tasks_destroy_by_id(id):
     conn = connect_to_db()
     row = conn.execute(
